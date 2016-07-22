@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
 using System.Linq;
 using System.Xml;
+using Microsoft.EntityFrameworkCore;
 
 namespace PanoramicData.PatchMagic.Controllers
 {
@@ -43,9 +44,31 @@ namespace PanoramicData.PatchMagic.Controllers
 			var cpeItemsList = ProcessXml(xmlDoc);
 
 			// Update the database
-			//UpdateDatabaseFromCpeItemsList(cpeItemsList);
+			UpdateDatabaseFromCpeItemsList(cpeItemsList);
 
 			return Ok("Successfull loaded XML");
+		}
+
+		private static void UpdateDatabaseFromCpeItemsList(IEnumerable<CpeItem> cpeItemsList)
+		{
+			var options = new DbContextOptions<CpeContext>();
+			using (var ctx = new CpeContext(options))
+			{
+				try
+				{
+					foreach (var cpeItem in cpeItemsList)
+					{
+						//ctx.CpeItems.Add(cpeItem);			// DOES NOT WORK YET
+					}
+				}
+				catch (Exception exception)
+				{
+					Console.WriteLine(exception.Message);
+					return;
+				}
+
+				//ctx.SaveChanges();
+			}
 		}
 
 		private static List<CpeItem> ProcessXml(XmlDocument xmlDoc)
