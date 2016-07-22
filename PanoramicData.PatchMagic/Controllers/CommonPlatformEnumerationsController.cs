@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
 using System.Linq;
+using System.Xml;
 
 namespace PanoramicData.PatchMagic.Controllers
 {
@@ -18,14 +20,73 @@ namespace PanoramicData.PatchMagic.Controllers
 			var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip").Result;
 			//var fileInfo = GetValue("https://scap.nist.gov/", "schema/cpe/2.3/cpe-dictionary_2.3.xsd").Result;
 
-			// Unzip to temp directory
+			// Unzip to a temp directory
 			var tempDirectoryInfo = GetTemporaryDirectory();
 			ZipFile.ExtractToDirectory(fileInfo.FullName, tempDirectoryInfo.FullName);
 
-			// Update the database
-			// UpdateDatabaseFromCpeFile(tempDirectoryInfo.EnumerateFiles().First());
+			// Get file
+			var filePath = Directory.GetFiles(tempDirectoryInfo.FullName).First(f => f.EndsWith("xml"));
 
-			return Ok(fileInfo);
+			// Create a new XmlDocument
+			var xmlDoc = new XmlDocument();
+
+			try
+			{
+				xmlDoc.LoadXml(System.IO.File.ReadAllText(filePath));
+			}
+			catch (Exception exception)
+			{
+				Console.WriteLine(exception.Message);
+				return Ok("Could not process XML");
+			}
+
+			var cpeItemsList = ProcessXml(xmlDoc);
+
+			// Update the database
+			//UpdateDatabaseFromCpeItemsList(cpeItemsList);
+
+			return Ok("Successfull loaded XML");
+		}
+
+		private static List<CpeItem> ProcessXml(XmlDocument xmlDoc)
+		{
+			var cpeItemsList = new List<CpeItem>();
+
+			foreach (XmlNode xmlNode in xmlDoc.DocumentElement.ChildNodes)
+			{
+				if (xmlNode.Name != "cpe-item") continue;
+
+				var cpeItem = new CpeItem
+				{
+					Name = xmlNode.Attributes["name"].Value
+				};
+
+				var references = new List<Reference>();
+
+				foreach (XmlNode childNode in xmlNode.ChildNodes)
+				{
+					switch (childNode.Name)
+					{
+						case "title":
+							cpeItem.Title = childNode.InnerText;
+							break;
+						case "references":
+							references.AddRange(from XmlNode referenceNode in childNode.ChildNodes
+								select new Reference
+								{
+									Href = referenceNode.Attributes["href"].Value
+								});
+							break;
+						case "cpe-23:cpe23-item":
+							cpeItem.Cpe23Name = childNode.InnerText;
+							break;
+					}
+				}
+				cpeItem.References = references;
+
+				cpeItemsList.Add(cpeItem);
+			}
+			return cpeItemsList;
 		}
 
 		private DirectoryInfo GetTemporaryDirectory() => Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
