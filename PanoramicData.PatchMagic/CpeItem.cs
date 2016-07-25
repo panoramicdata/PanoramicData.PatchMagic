@@ -2,7 +2,7 @@
 
 namespace PanoramicData.PatchMagic
 {
-	public class CpeItem
+	public class CpeItem : IdentifiedItem
 	{
 		public string Name { get; set; }
 		public string Title { get; set; }

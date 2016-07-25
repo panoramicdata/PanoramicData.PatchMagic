@@ -44,30 +44,22 @@ namespace PanoramicData.PatchMagic.Controllers
 			var cpeItemsList = ProcessXml(xmlDoc);
 
 			// Update the database
+			// Note: http://www.asp.net/web-api/overview/error-handling/web-api-global-error-handling
 			UpdateDatabaseFromCpeItemsList(cpeItemsList);
 
-			return Ok("Successfull loaded XML");
+			return Ok("Successfully loaded XML");
 		}
 
 		private static void UpdateDatabaseFromCpeItemsList(IEnumerable<CpeItem> cpeItemsList)
 		{
-			var options = new DbContextOptions<CpeContext>();
-			using (var ctx = new CpeContext(options))
+			var options = new DbContextOptions<CodeContext>();
+			using (var ctx = new CodeContext(options))
 			{
-				try
+				foreach (var cpeItem in cpeItemsList)
 				{
-					foreach (var cpeItem in cpeItemsList)
-					{
-						//ctx.CpeItems.Add(cpeItem);			// DOES NOT WORK YET
-					}
+					ctx.CpeItems.Add(cpeItem);
 				}
-				catch (Exception exception)
-				{
-					Console.WriteLine(exception.Message);
-					return;
-				}
-
-				//ctx.SaveChanges();
+				ctx.SaveChanges();
 			}
 		}
 
@@ -139,6 +131,17 @@ namespace PanoramicData.PatchMagic.Controllers
 		public string Get(int id)
 		{
 			return "value";
+		}
+
+		[HttpGet("test")]
+		public IActionResult Test()
+		{
+			using (var ctx = new CodeContext(new DbContextOptions<CodeContext>()))
+			{
+				ctx.CpeItems.Add(new CpeItem());
+				ctx.SaveChanges();
+			}
+			return Ok("OK");
 		}
 	}
 }
