@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace PanoramicData.PatchMagic.Controllers
 {
 	[Route("api/[controller]")]
-	public class CommonPlatformEnumerationsController : Controller
+	public class CpeController : Controller
 	{
 		[HttpGet("update")]
 		public IActionResult Update()
@@ -57,7 +57,11 @@ namespace PanoramicData.PatchMagic.Controllers
 			{
 				foreach (var cpeItem in cpeItemsList)
 				{
-					ctx.CpeItems.Add(cpeItem);
+					// Check if the item is already in the database
+					//if (!ctx.CpeItems.Any(item => item.Name == cpeItem.Name))
+					{
+						ctx.CpeItems.Add(cpeItem);
+					}
 				}
 				ctx.SaveChanges();
 			}
