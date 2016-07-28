@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PanoramicData.PatchMagic.Models;
+using PanoramicData.PatchMagic.Models.Cpe;
 using Xunit;
 
 namespace PanoramicData.PatchMagic.Test

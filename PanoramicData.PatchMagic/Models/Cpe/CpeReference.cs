@@ -1,4 +1,4 @@
-﻿namespace PanoramicData.PatchMagic
+﻿namespace PanoramicData.PatchMagic.Models.Cpe
 {
 	public class Reference : IdentifiedItem
 	{

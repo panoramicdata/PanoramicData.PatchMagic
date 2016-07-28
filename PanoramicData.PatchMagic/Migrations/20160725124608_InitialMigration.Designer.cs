@@ -33,7 +33,7 @@ namespace PanoramicData.PatchMagic.Migrations
                     b.ToTable("CpeItems");
                 });
 
-            modelBuilder.Entity("PanoramicData.PatchMagic.Reference", b =>
+            modelBuilder.Entity("PanoramicData.PatchMagic.CpeReference", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -49,7 +49,7 @@ namespace PanoramicData.PatchMagic.Migrations
                     b.ToTable("References");
                 });
 
-            modelBuilder.Entity("PanoramicData.PatchMagic.Reference", b =>
+            modelBuilder.Entity("PanoramicData.PatchMagic.CpeReference", b =>
                 {
                     b.HasOne("PanoramicData.PatchMagic.CpeItem", "CpeItem")
                         .WithMany("References")
