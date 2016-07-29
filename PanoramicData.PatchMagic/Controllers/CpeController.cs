@@ -43,9 +43,9 @@ namespace PanoramicData.PatchMagic.Controllers
 			{
 				foreach (var cpeItem in cpeItemsList)
 				{
-					ctx.CpeItems.Add(cpeItem);
+					//ctx.CpeItems.Add(cpeItem);
 				}
-				ctx.SaveChanges();
+				//ctx.SaveChanges();
 			}
 		}
 
