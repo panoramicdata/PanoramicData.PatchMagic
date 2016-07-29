@@ -23,7 +23,7 @@ namespace PanoramicData.PatchMagic.Migrations
 				});
 
 			migrationBuilder.CreateTable(
-				name: "References",
+				name: "CveReferences",
 				columns: table => new
 				{
 					Id = table.Column<int>(nullable: false)
@@ -44,14 +44,14 @@ namespace PanoramicData.PatchMagic.Migrations
 
 			migrationBuilder.CreateIndex(
 				name: "IX_References_CpeItemId",
-				table: "References",
+				table: "CveReferences",
 				column: "CpeItemId");
 		}
 
 		protected override void Down(MigrationBuilder migrationBuilder)
 		{
 			migrationBuilder.DropTable(
-				name: "References");
+				name: "CveReferences");
 
 			migrationBuilder.DropTable(
 				name: "CpeItems");

@@ -1,7 +1,16 @@
-﻿namespace PanoramicData.PatchMagic.Models.Cve
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace PanoramicData.PatchMagic.Models.Cve
 {
 	public class LogicalTest
 	{
-		public Entry Entry { get; set; }
+		//[Required]
+		//public VulnerableConfiguration VulnerableConfiguration { get; set; }
+		public LogicalTestOperator Operator { get; set; }
+
+		[DefaultValue(false)]
+		public bool Negate { get; set; }
+		//public ICollection<>
 	}
 }

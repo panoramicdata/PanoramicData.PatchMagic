@@ -77,7 +77,7 @@
             <xsd:sequence>
                   <xsd:element name="title" type="cpe_dict:TextType" minOccurs="1" maxOccurs="unbounded"/>
                   <xsd:element name="notes" type="cpe_dict:NotesType" minOccurs="0" maxOccurs="unbounded"/>
-                  <xsd:element name="references" type="cpe_dict:CpeReferencesType" minOccurs="0" maxOccurs="1"/>
+                  <xsd:element name="references" type="cpe_dict:CpeCpeCveReferencesListsType" minOccurs="0" maxOccurs="1"/>
                   <xsd:element name="check" type="cpe_dict:CheckType" minOccurs="0" maxOccurs="unbounded"/>
                   <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax"/>
             </xsd:sequence>
@@ -115,9 +115,9 @@
             </xsd:sequence>
             <xsd:attribute ref="xml:lang"/>
       </xsd:complexType>
-      <xsd:complexType name="CpeReferencesType">
+      <xsd:complexType name="CpeCpeCveReferencesListsType">
             <xsd:annotation>
-                  <xsd:documentation xml:lang="en">The CpeReferencesType complex type defines an element used to hold a collection of individual references.  Each reference consists of a piece of text (intended to be human-readable) and a URI (intended to be a URL, and point to a real resource) and is used to point to extra descriptive material, for example a supplier's web site or platform documentation.</xsd:documentation>
+                  <xsd:documentation xml:lang="en">The CpeCpeCveReferencesListsType complex type defines an element used to hold a collection of individual references.  Each reference consists of a piece of text (intended to be human-readable) and a URI (intended to be a URL, and point to a real resource) and is used to point to extra descriptive material, for example a supplier's web site or platform documentation.</xsd:documentation>
             </xsd:annotation>
             <xsd:sequence>
                   <xsd:element name="reference" minOccurs="1" maxOccurs="unbounded">

@@ -8,12 +8,10 @@ using System.IO.Compression;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.EntityFrameworkCore;
 using PanoramicData.PatchMagic.Models;
 using PanoramicData.PatchMagic.Models.Cpe;
 using PanoramicData.PatchMagic.Models.Cve;
-using Reference = PanoramicData.PatchMagic.Models.Cve.Reference;
 
 namespace PanoramicData.PatchMagic.Controllers
 {
@@ -24,10 +22,10 @@ namespace PanoramicData.PatchMagic.Controllers
 		public IActionResult Update()
 		{
 			// Update CPE database
-			//if (!UpdateCpe())
-			//{
-			//	return Ok("Could not process CPE XML");
-			//}
+			if (!UpdateCpe())
+			{
+				return Ok("Could not process CPE XML");
+			}
 
 			// Update CVE database
 			if (!UpdateCve())
@@ -51,9 +49,17 @@ namespace PanoramicData.PatchMagic.Controllers
 			}
 		}
 
-		private static void UpdateDatabaseFromCveItemsList(List<Entry> entries)
+		private static void UpdateDatabaseFromCveItemsList(IEnumerable<Entry> entries)
 		{
-			return;
+			var options = new DbContextOptions<CodeContext>();
+			using (var ctx = new CodeContext(options))
+			{
+				foreach (var entry in entries)
+				{
+					ctx.Entries.Add(entry);
+				}
+				//ctx.SaveChanges();
+			}
 		}
 
 		private static bool UpdateCve()
@@ -83,10 +89,10 @@ namespace PanoramicData.PatchMagic.Controllers
 				return false;
 			}
 
-			ProcessCveXml(filePath);
+			var entries = ProcessCveXml(filePath);
 
 			// Update the database
-			//UpdateDatabaseFromCveItemsList(nvdData);
+			UpdateDatabaseFromCveItemsList(entries);
 
 			return true;
 		}
@@ -126,7 +132,7 @@ namespace PanoramicData.PatchMagic.Controllers
 			return true;
 		}
 
-		private static void ProcessCveXml(string filePath)
+		private static IEnumerable<Entry> ProcessCveXml(string filePath)
 		{
 			// Read the XML
 			var xDocument = XDocument.Load(filePath);
@@ -139,7 +145,7 @@ namespace PanoramicData.PatchMagic.Controllers
 				var entry = new Entry
 				{
 					CveId = element.Attributes("id").First().Value,
-					References = new List<References>()
+					References = new List<CveReferences>()
 				};
 
 				foreach (var childNode in element.Nodes())
@@ -149,11 +155,14 @@ namespace PanoramicData.PatchMagic.Controllers
 
 					switch (xElementNode.Name.LocalName)
 					{
+						case "vulnerable-configuration":
+
+							break;
 						case "references":
-							var references = new References
+							var references = new CveReferences
 							{
 								ReferenceType = (ReferenceType) Enum.Parse(typeof(ReferenceType), xElementNode.Attribute("reference_type").Value, true),
-								ReferenceList = new List<Reference>()
+								ReferenceList = new List<ReferencesList>()
 							};
 
 							// Process each sub node: either a source node or reference
@@ -167,7 +176,7 @@ namespace PanoramicData.PatchMagic.Controllers
 										references.Source = xReferencesChildNode.Value;
 										break;
 									case "reference":
-										references.ReferenceList.Add(new Reference
+										references.ReferenceList.Add(new ReferencesList
 										{
 											Href = xReferencesChildNode.Attribute("href").Value,
 											Value = xReferencesChildNode.Value
@@ -244,6 +253,9 @@ namespace PanoramicData.PatchMagic.Controllers
 										case "integrity-impact":
 											entry.BaseMetrics.IntegrityImpact = (IntegrityImpactType) Enum.Parse(typeof(IntegrityImpactType), xBaseMetricsChildNode.Value, true);
 											break;
+										case "availability-impact":
+											entry.BaseMetrics.AvailabilityImpact = (AvailabilityImpactType) Enum.Parse(typeof(AvailabilityImpactType), xBaseMetricsChildNode.Value, true);
+											break;
 										case "source":
 											entry.BaseMetrics.Source = xBaseMetricsChildNode.Value;
 											break;
@@ -264,6 +276,7 @@ namespace PanoramicData.PatchMagic.Controllers
 				}
 				entries.Add(entry);
 			}
+			return entries;
 		}
 
 		private static IEnumerable<CpeItem> ProcessCpeXml(XmlDocument xmlDoc)

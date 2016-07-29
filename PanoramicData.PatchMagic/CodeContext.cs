@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PanoramicData.PatchMagic.Models.Cpe;
+using PanoramicData.PatchMagic.Models.Cve;
 
 namespace PanoramicData.PatchMagic
 {
@@ -10,6 +11,14 @@ namespace PanoramicData.PatchMagic
 		}
 		public DbSet<CpeItem> CpeItems { get; set; }
 		public DbSet<Reference> References { get; set; }
+		public DbSet<Entry> Entries { get; set; }
+		public DbSet<VulnerableConfiguration> VulnerableConfigurations { get; set; }
+		public DbSet<VulnerableSoftwareList> VulnerableSoftwareLists { get; set; }
+		public DbSet<VulnerableProduct> VulnerableProducts { get; set; }
+		public DbSet<CveReferences> CveReferences { get; set; }
+		public DbSet<ReferencesList> ReferencesLists { get; set; }
+		public DbSet<BaseMetrics> BaseMetrics { get; set; }
+
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PanoramicData.PatchMagic.Models.Cve
 {
 	public class BaseMetrics : IdentifiedItem
 	{
+		[Required]
 		public Entry Entry { get; set; }
 		public float Score { get; set; }
 		public string AccessVector { get; set; }
