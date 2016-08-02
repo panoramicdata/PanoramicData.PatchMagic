@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PanoramicData.PatchMagic.Models.Cve
 {
-	public class LogicalTest
+	public class LogicalTest : IdentifiedItem
 	{
 		[Required]
 		public VulnerableConfiguration VulnerableConfiguration { get; set; }

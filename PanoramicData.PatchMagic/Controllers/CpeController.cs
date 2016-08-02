@@ -58,15 +58,15 @@ namespace PanoramicData.PatchMagic.Controllers
 				{
 					ctx.Entries.Add(entry);
 				}
-				//ctx.SaveChanges();
+				ctx.SaveChanges();
 			}
 		}
 
 		private static bool UpdateCve()
 		{
 			// Download the latest CVE data.
-			var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cve/nvdcve-2.0-Recent.xml.zip").Result;
-			//var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cve/nvdcve-2.0-2016.xml.zip").Result;
+			//var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cve/nvdcve-2.0-Recent.xml.zip").Result;
+			var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cve/nvdcve-2.0-2016.xml.zip").Result;
 
 			// Unzip to a temporary directory.
 			var tempDirectoryInfo = GetTemporaryDirectory();
