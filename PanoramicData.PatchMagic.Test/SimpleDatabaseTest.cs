@@ -10,12 +10,16 @@ namespace PanoramicData.PatchMagic.Test
 		[Fact]
 		public void SimpleDatabaseTest1()
 		{
-			using (var ctx = new CodeContext(new DbContextOptions<CodeContext>()))
+			var options = new DbContextOptionsBuilder<CodeContext>()
+				.UseInMemoryDatabase(nameof(SimpleDatabaseTest1))
+				.Options;
+
+			using (var ctx = new CodeContext(options))
 			{
 				ctx.CpeItems.Add(new CpeItem());
 				ctx.SaveChanges();
+				Assert.Single(ctx.CpeItems);
 			}
-			Assert.Equal(true, true);
 		}
 	}
 }

@@ -6,7 +6,7 @@ namespace PanoramicData.PatchMagic
 {
 	public class CodeContext : DbContext
 	{
-		public CodeContext(DbContextOptions options) : base(options)
+		public CodeContext(DbContextOptions<CodeContext> options) : base(options)
 		{
 		}
 		public DbSet<CpeItem> CpeItems { get; set; }
@@ -19,10 +19,30 @@ namespace PanoramicData.PatchMagic
 		public DbSet<ReferencesList> ReferencesLists { get; set; }
 		public DbSet<BaseMetrics> BaseMetrics { get; set; }
 
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<BaseMetrics>()
+				.HasOne(baseMetrics => baseMetrics.Entry)
+				.WithOne(entry => entry.BaseMetrics)
+				.HasForeignKey<BaseMetrics>("EntryId");
+
+			modelBuilder.Entity<VulnerableConfiguration>()
+				.HasOne(configuration => configuration.Entry)
+				.WithOne(entry => entry.VulnerableConfiguration)
+				.HasForeignKey<VulnerableConfiguration>("EntryId");
+
+			modelBuilder.Entity<VulnerableSoftwareList>()
+				.HasOne(softwareList => softwareList.Entry)
+				.WithOne(entry => entry.VulnerableSoftwareList)
+				.HasForeignKey<VulnerableSoftwareList>("EntryId");
+		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=PatchMagic;Trusted_Connection=True;");
+			if (!optionsBuilder.IsConfigured)
+			{
+				optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=PatchMagic;Trusted_Connection=True;");
+			}
 			//optionsBuilder.UseSqlServer("Server=.\\MSSQLSERVER2014;Initial Catalog=PatchMagic;Integrated Security=True;");
 		}
 	}

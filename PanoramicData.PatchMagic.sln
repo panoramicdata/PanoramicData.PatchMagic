@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11012.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PanoramicData.PatchMagic", "PanoramicData.PatchMagic\PanoramicData.PatchMagic.xproj", "{25C898C6-67CB-4F73-B1AE-A26C184827DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PanoramicData.PatchMagic", "PanoramicData.PatchMagic\PanoramicData.PatchMagic.csproj", "{25C898C6-67CB-4F73-B1AE-A26C184827DF}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PanoramicData.PatchMagic.Test", "PanoramicData.PatchMagic.Test\PanoramicData.PatchMagic.Test.xproj", "{C089F0F5-1756-4953-AE1A-263E9D3A38CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PanoramicData.PatchMagic.Test", "PanoramicData.PatchMagic.Test\PanoramicData.PatchMagic.Test.csproj", "{C089F0F5-1756-4953-AE1A-263E9D3A38CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
