@@ -43,7 +43,6 @@ namespace PanoramicData.PatchMagic
 			{
 				optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=PatchMagic;Trusted_Connection=True;");
 			}
-			//optionsBuilder.UseSqlServer("Server=.\\MSSQLSERVER2014;Initial Catalog=PatchMagic;Integrated Security=True;");
 		}
 	}
 }
