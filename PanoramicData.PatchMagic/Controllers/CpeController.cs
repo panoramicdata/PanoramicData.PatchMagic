@@ -65,7 +65,6 @@ namespace PanoramicData.PatchMagic.Controllers
 		private static bool UpdateCve()
 		{
 			// Download the latest CVE data.
-			//var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cve/nvdcve-2.0-Recent.xml.zip").Result;
 			var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cve/nvdcve-2.0-2016.xml.zip").Result;
 
 			// Unzip to a temporary directory.
@@ -101,7 +100,6 @@ namespace PanoramicData.PatchMagic.Controllers
 		{
 			// Download the latest CPE list
 			var fileInfo = GetValue("http://static.nvd.nist.gov/", "/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip").Result;
-			//var fileInfo = GetValue("https://scap.nist.gov/", "schema/cpe/2.3/cpe-dictionary_2.3.xsd").Result;
 
 			// Unzip to a temp directory
 			var tempDirectoryInfo = GetTemporaryDirectory();
@@ -151,7 +149,10 @@ namespace PanoramicData.PatchMagic.Controllers
 				foreach (var childNode in element.Nodes())
 				{
 					var xElementNode = childNode as XElement;
-					if (xElementNode == null) continue;
+					if (xElementNode == null)
+					{
+						continue;
+					}
 
 					switch (xElementNode.Name.LocalName)
 					{
@@ -198,7 +199,10 @@ namespace PanoramicData.PatchMagic.Controllers
 							foreach (var productNode in xElementNode.Nodes())
 							{
 								var xElementProduct = productNode as XElement;
-								if (xElementProduct == null) continue;
+								if (xElementProduct == null)
+								{
+									continue;
+								}
 								entry.VulnerableSoftwareList.VulnerableProducts = new List<VulnerableProduct>
 								{
 									new VulnerableProduct { Product = xElementProduct.Value }
@@ -225,13 +229,19 @@ namespace PanoramicData.PatchMagic.Controllers
 								entry.BaseMetrics = new BaseMetrics();
 
 								// Iterate the sub-nodes
-								if (xElementBaseMetricsNode == null) continue;
+								if (xElementBaseMetricsNode == null)
+								{
+									continue;
+								}
 
 								foreach (var baseMetricsChildNode in xElementBaseMetricsNode.Nodes())
 								{
 									var xBaseMetricsChildNode = baseMetricsChildNode as XElement;
 
-									if (xBaseMetricsChildNode == null) continue;
+									if (xBaseMetricsChildNode == null)
+									{
+										continue;
+									}
 
 									switch (xBaseMetricsChildNode.Name.LocalName)
 									{
@@ -285,7 +295,10 @@ namespace PanoramicData.PatchMagic.Controllers
 
 			foreach (XmlNode xmlNode in xmlDoc.DocumentElement.ChildNodes)
 			{
-				if (xmlNode.Name != "cpe-item") continue;
+				if (xmlNode.Name != "cpe-item")
+				{
+					continue;
+				}
 
 				var cpeItem = new CpeItem
 				{
