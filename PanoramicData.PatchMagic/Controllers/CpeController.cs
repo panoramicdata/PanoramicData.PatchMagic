@@ -76,6 +76,7 @@ namespace PanoramicData.PatchMagic.Controllers
 
 			// Create a new XmlDocument and load.
 			var xmlDoc = new XmlDocument();
+			xmlDoc.XmlResolver = null;
 
 			try
 			{
@@ -111,6 +112,7 @@ namespace PanoramicData.PatchMagic.Controllers
 
 			// Create a new XmlDocument
 			var xmlDoc = new XmlDocument();
+			xmlDoc.XmlResolver = null;
 
 			try
 			{
@@ -138,7 +140,8 @@ namespace PanoramicData.PatchMagic.Controllers
 			var settings = new XmlReaderSettings
 			{
 				DtdProcessing = DtdProcessing.Prohibit,
-				XmlResolver = null
+				XmlResolver = null,
+				IgnoreWhitespace = true
 			};
 			return XmlReader.Create(filePath, settings);
 		}
