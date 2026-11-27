@@ -79,7 +79,8 @@ namespace PanoramicData.PatchMagic.Controllers
 
 			try
 			{
-				xmlDoc.LoadXml(System.IO.File.ReadAllText(filePath));
+				using var reader = CreateSecureXmlReader(filePath);
+				xmlDoc.Load(reader);
 			}
 			catch (Exception exception)
 			{
@@ -113,12 +114,13 @@ namespace PanoramicData.PatchMagic.Controllers
 
 			try
 			{
-				xmlDoc.LoadXml(System.IO.File.ReadAllText(filePath));
+				using var reader = CreateSecureXmlReader(filePath);
+				xmlDoc.Load(reader);
 			}
 			catch (Exception exception)
 			{
 				Console.WriteLine(exception.Message);
-				
+
 				return false;
 			}
 
@@ -130,10 +132,22 @@ namespace PanoramicData.PatchMagic.Controllers
 			return true;
 		}
 
+		// The NVD feeds are downloaded over the network, so DTDs and external entities are refused (XXE).
+		private static XmlReader CreateSecureXmlReader(string filePath)
+		{
+			var settings = new XmlReaderSettings
+			{
+				DtdProcessing = DtdProcessing.Prohibit,
+				XmlResolver = null
+			};
+			return XmlReader.Create(filePath, settings);
+		}
+
 		private static IEnumerable<Entry> ProcessCveXml(string filePath)
 		{
 			// Read the XML
-			var xDocument = XDocument.Load(filePath);
+			using var reader = CreateSecureXmlReader(filePath);
+			var xDocument = XDocument.Load(reader);
 			var elements = xDocument.Root.Elements();
 			var entries = new List<Entry>();
 
